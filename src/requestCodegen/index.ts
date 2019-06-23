@@ -59,10 +59,22 @@ export function requestCodegen(paths: IPaths): IRequestClass {
         imports.push(responseType)
         parsedParameters.imports = imports
       }
-
+      let operationId;
+      // If there is an operationId in the request definition, use it. Otherwise
+      // generate one, a swagger-codegen does this as well.
+      if (reqProps.operationId) {
+        operationId = reqProps.operationId
+      } else {
+        // Get the path and replace slashes and path parameters with underscore
+        // and append the method name. Because the generator camelizes the
+        // resulting method name in operationId mode we get the intended
+        // method name without having to do this here with either some more complex
+        // parsing or camelizing the resulting string already here.
+        operationId = path.replace(/[/{}]+/g, "_") + "_" + method
+      }
       requestClasses[className].push({
         name: methodName,
-        operationId: reqProps.operationId,
+        operationId: operationId,
         requestSchema: {
           summary: reqProps.summary,
           path,
