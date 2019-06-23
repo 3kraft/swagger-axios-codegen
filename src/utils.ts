@@ -54,6 +54,9 @@ export function toBaseType(s: string) {
     case 'file':
       result = 'any'
       break
+    case 'boolean':
+      result = 'boolean'
+      break
     default:
       result = 'any'
       break
